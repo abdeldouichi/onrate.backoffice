@@ -36,19 +36,24 @@ class User implements UserInterface
     private ?string $password;
 
     /**
-     * @ORM\OneToMany(targetEntity=Rule::class, mappedBy="user")
+     * @ORM\OneToMany(targetEntity=Note::class, mappedBy="user", fetch="EXTRA_LAZY")
      */
-    private Collection $rules;
+    private ?Collection $notes;
 
     /**
-     * @ORM\OneToMany(targetEntity=Topic::class, mappedBy="user")
+     * @ORM\OneToMany(targetEntity=Rule::class, mappedBy="user", fetch="EXTRA_LAZY")
      */
-    private Collection $topics;
+    private ?Collection $rules;
 
     /**
-     * @ORM\OneToMany(targetEntity=MockUser::class, mappedBy="user")
+     * @ORM\OneToMany(targetEntity=Topic::class, mappedBy="user", fetch="EXTRA_LAZY")
      */
-    private Collection $users;
+    private ?Collection $topics;
+
+    /**
+     * @ORM\OneToMany(targetEntity=MockUser::class, mappedBy="user", fetch="EXTRA_LAZY")
+     */
+    private ?Collection $mockUsers;
 
     /**
      * @ORM\Column(type="datetime")
@@ -59,7 +64,7 @@ class User implements UserInterface
     {
         $this->rules = new ArrayCollection();
         $this->topics = new ArrayCollection();
-        $this->users = new ArrayCollection();
+        $this->mockUsers = new ArrayCollection();
         $this->createdAt = new \DateTime();
     }
 
@@ -167,15 +172,15 @@ class User implements UserInterface
     /**
      * @return Collection|MockUser[]
      */
-    public function getUsers(): Collection
+    public function getMockUsers(): Collection
     {
-        return $this->users;
+        return $this->mockUsers;
     }
 
     public function addUser(MockUser $user): self
     {
-        if (!$this->users->contains($user)) {
-            $this->users[] = $user;
+        if (!$this->mockUsers->contains($user)) {
+            $this->mockUsers[] = $user;
             $user->setUser($this);
         }
 
@@ -184,7 +189,7 @@ class User implements UserInterface
 
     public function removeUser(MockUser $user): self
     {
-        if ($this->users->removeElement($user)) {
+        if ($this->mockUsers->removeElement($user)) {
             // set the owning side to null (unless already changed)
             if ($user->getUser() === $this) {
                 $user->setUser(null);
@@ -229,6 +234,14 @@ class User implements UserInterface
     public function setCreatedAt(\DateTime $createdAt): void
     {
         $this->createdAt = $createdAt;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getNotes(): Collection
+    {
+        return $this->notes;
     }
 
 

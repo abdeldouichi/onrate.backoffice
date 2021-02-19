@@ -18,14 +18,21 @@ class Note
     private ?int $id;
 
     /**
-     * @var int $scale
+     * @var int|null $scale
      * @ORM\Column(type="integer")
      */
-    private int $scale;
+    private ?int $scale;
+
     /**
      * @ORM\Column(type="float")
      */
     private ?float $grade;
+
+    /**
+     * @var string|null $comment
+     * @ORM\Column(type="text",nullable=true)
+     */
+    private ?string $comment;
 
     /**
      * @ORM\ManyToOne(targetEntity=MockUser::class)
@@ -39,6 +46,10 @@ class Note
      */
     private ?Rule $rule;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="notes")
+     */
+    private ?User $user;
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
@@ -125,6 +136,38 @@ class Note
     public function setCreatedAt(\DateTime $createdAt): void
     {
         $this->createdAt = $createdAt;
+    }
+
+    /**
+     * @return string
+     */
+    public function getComment(): ?string
+    {
+        return $this->comment;
+    }
+
+    /**
+     * @param string $comment
+     */
+    public function setComment(string $comment): void
+    {
+        $this->comment = $comment;
+    }
+
+    /**
+     * @return User|null
+     */
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param User|null $user
+     */
+    public function setUser(?User $user): void
+    {
+        $this->user = $user;
     }
 
 }

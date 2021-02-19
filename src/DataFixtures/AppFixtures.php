@@ -38,7 +38,8 @@ class AppFixtures extends Fixture
             $topic = new Topic();
             $topic
                 ->setDescription(sprintf("description topic lorem epsum %d", $i))
-                ->setUser($user);
+                ->setTitle(sprintf("title topic lorem epsum %d", $i));
+            $topic->setUser($user);
             $user->addTopic($topic);
             $manager->persist($topic);
             for($j=0;$j<5;$j++){
@@ -65,6 +66,7 @@ class AppFixtures extends Fixture
                     ->setGrade(rand(5, 20)/20)
                     ->setRule($rule)
                     ->setScale(20);
+                $note->setUser($user);
 
                 $manager->persist($note);
             }

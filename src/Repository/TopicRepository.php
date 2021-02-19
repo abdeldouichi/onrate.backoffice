@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Topic;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Entity\User;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Persistence\ManagerRegistry;
+use App\AbstractClasses\AbstractRepository;
 
 /**
  * @method Topic|null find($id, $lockMode = null, $lockVersion = null)
@@ -12,13 +14,26 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Topic[]    findAll()
  * @method Topic[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class TopicRepository extends ServiceEntityRepository
+class TopicRepository extends AbstractRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Topic::class);
     }
 
+    /**
+     * @param User $user
+     * @return Topic[]|null
+     */
+    public function findAllByUser(User $user): ?Collection
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.user = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
     // /**
     //  * @return Topic[] Returns an array of Topic objects
     //  */

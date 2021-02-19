@@ -20,16 +20,22 @@ class Topic
     private ?int $id;
 
     /**
-     * @ORM\OneToMany(targetEntity=Rule::class, mappedBy="topic")
+     * @ORM\OneToMany(targetEntity=Rule::class, mappedBy="topic", fetch="EXTRA_LAZY")
      * @var Collection|null
      */
     private ?Collection $rules;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     * @var string
+     * @ORM\Column(type="text")
+     * @var string|null
      */
-    private string $description;
+    private ?string $description;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @var string|null
+     */
+    private ?string $title;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="topics")
@@ -88,7 +94,7 @@ class Topic
         return $this->description;
     }
 
-    public function setDescription(string $description): self
+    public function setDescription(?string $description): self
     {
         $this->description = $description;
 
@@ -122,5 +128,22 @@ class Topic
     {
         $this->createdAt = $createdAt;
     }
+
+    /**
+     * @return string|null
+     */
+    public function getTitle():? string
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param string|null $title
+     */
+    public function setTitle(?string $title): void
+    {
+        $this->title = $title;
+    }
+
 
 }
